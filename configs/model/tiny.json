@@ -1,0 +1,13 @@
+{
+  "model_type": "causal_transformer_decoder",
+  "name": "tuna-tiny-1m",
+  "vocab_size": 4096,
+  "context_length": 128,
+  "d_model": 64,
+  "n_layers": 2,
+  "n_heads": 2,
+  "d_ff": 256,
+  "dropout": 0.1,
+  "bias": false,
+  "norm_eps": 1e-5
+}

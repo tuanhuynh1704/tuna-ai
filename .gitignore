@@ -1,0 +1,35 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Caches and testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Data and checkpoints (do not commit raw data or binary checkpoints)
+data/raw/*
+data/processed/*
+data/tokenized/*
+checkpoints/*
+!checkpoints/.gitkeep
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/tokenized/.gitkeep
+!data/validation/.gitkeep
+!data/manifests/.gitkeep
+
+# IDE and OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
