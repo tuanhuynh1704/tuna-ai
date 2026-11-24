@@ -22,7 +22,9 @@ data/tokenized/*
 data/experiments/*
 data/evaluation/*
 checkpoints/*
+models/*
 !checkpoints/.gitkeep
+!models/.gitkeep
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !data/tokenized/.gitkeep

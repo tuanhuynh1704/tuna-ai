@@ -194,12 +194,21 @@ flowchart LR
   - Báo cáo kỹ thuật: `docs/weekly_reports/day_16_notes.md`.
 - **Tiêu chí nghiệm thu**: Mô hình biết dừng lượt (`<|im_end|>`) và phản hồi theo định dạng hỏi - đáp thay vì chỉ tiếp nối văn bản tự do; 98/98 tests toàn dự án passed 100%.
 
-#### Milestone M11: Inference Engine Offline & Tối ưu CPU
+#### Milestone M11: Inference Engine Offline & Tối ưu CPU *(Đã hoàn thành - Nghiệm thu Ngày 17)*
 - **Nội dung**:
-  - Bộ sinh văn bản (`src/inference/generator.py`): Greedy Search, Temperature, Top-K, Top-P (Nucleus Sampling), Repetition Penalty.
-  - Nghiên cứu và đo đạc **KV Cache** trên CPU xem có cải thiện độ trễ mỗi token hay không.
-  - Đóng gói định dạng mô hình: `safetensors` + `config.json` + `tokenizer.json` + `model_card.md`.
-- **Tiêu chí nghiệm thu**: Chạy inference offline 100% không cần kết nối mạng trên máy tính i7-1165G7.
+  - Bộ sinh văn bản (`src/inference/generator.py`): Greedy Search, Temperature, Top-K, Top-P (Nucleus Sampling), Repetition Penalty, Streaming Generator.
+  - Nghiên cứu và đo đạc **KV Cache** trên CPU i7-1165G7: Tăng tốc giải mã lên tới 12.19x, chuyển độ phức tạp từ $O(N^2)$ xuống $O(N)$.
+  - Đóng gói định dạng mô hình Offline: `config.json` + `model_weights.pt` + `tokenizer.json` + `model_card.md` tại `models/tuna_offline_v1/`.
+  - Cung cấp hàm nạp một dòng `load_offline_model()` sẵn sàng suy luận độc lập không cần internet.
+- **Sản phẩm bàn giao**:
+  - `src/inference/kv_cache.py`: Quản lý bộ đệm Key-Value Cache cho Attention.
+  - `src/inference/generator.py`: Lớp `TextGenerator` đa chiến lược lấy mẫu và phát luồng stream.
+  - `src/inference/exporter.py`: Đóng gói `ModelExporter` và nạp mô hình offline `load_offline_model`.
+  - `research/inference/benchmark_kv_cache.py`: Kịch bản đo lường đối đầu có và không có KV Cache.
+  - `experiments/reports/m11_kv_cache_benchmark.md`: Báo cáo benchmark định lượng chi tiết.
+  - `tests/test_inference.py`: Bộ kiểm thử đơn vị tự động 4/4 bài test.
+  - Báo cáo kỹ thuật: `docs/weekly_reports/day_17_notes.md`.
+- **Tiêu chí nghiệm thu**: Chạy inference offline 100% không cần kết nối mạng trên máy tính i7-1165G7; KV Cache đạt tăng tốc vượt bậc; 102/102 tests toàn dự án passed 100%.
 
 #### Milestone M12: Model Serving API & Tài liệu Tổng kết
 - **Nội dung**:

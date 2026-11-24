@@ -125,12 +125,14 @@ class TunaLM(nn.Module):
     def forward(
         self,
         input_ids: torch.Tensor,
-        targets: Optional[torch.Tensor] = None
+        targets: Optional[torch.Tensor] = None,
+        kv_cache: Optional[Any] = None
     ) -> Tuple[torch.Tensor, Optional[torch.Tensor]]:
         """
         Forward pass của mô hình:
         input_ids: (Batch_Size, Seq_Len)
         targets: (Batch_Size, Seq_Len) (tùy chọn)
+        kv_cache: Bộ đệm KVCache (tùy chọn phục vụ suy luận)
         
         Trả về:
           - logits: (Batch_Size, Seq_Len, vocab_size)
@@ -138,12 +140,16 @@ class TunaLM(nn.Module):
         """
         B, T = input_ids.shape
 
-        # 1. Embedding
-        x = self.embedding(input_ids)
+        pos_offset = 0
+        if kv_cache is not None:
+            pos_offset = kv_cache.get_seq_len()
+
+        # 1. Embedding với pos_offset cho KV Cache
+        x = self.embedding(input_ids, pos_offset=pos_offset)
 
         # 2. Truyền qua N khối Transformer Block
-        for block in self.blocks:
-            x = block(x)
+        for i, block in enumerate(self.blocks):
+            x = block(x, kv_cache=kv_cache, layer_idx=i)
 
         # 3. Chuẩn hóa cuối
         x = self.final_norm(x)

@@ -8,6 +8,7 @@ Causal Multi-Head Self-Attention (MHA) kèm Causal Masking:
 - Bảo đảm tính tự hồi quy (Autoregressive): mỗi token chỉ được tương tác với quá khứ.
 """
 
+from typing import Optional, Any, Tuple, Union
 import math
 import torch
 import torch.nn as nn
@@ -36,8 +37,13 @@ class CausalSelfAttention(nn.Module):
         mask = torch.triu(torch.full((context_length, context_length), float('-inf')), diagonal=1)
         self.register_buffer("mask", mask.view(1, 1, context_length, context_length))
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        B, T, C = x.shape  # Batch_Size, Context_Length, d_model
+    def forward(
+        self,
+        x: torch.Tensor,
+        kv_cache: Optional[Any] = None,
+        layer_idx: Optional[int] = None
+    ) -> torch.Tensor:
+        B, T, C = x.shape  # Batch_Size, Seq_Len, d_model
 
         # 1. Tính Q, K, V đồng thời: (B, T, 3 * d_model)
         qkv = self.c_attn(x)
@@ -48,18 +54,33 @@ class CausalSelfAttention(nn.Module):
         k = k.view(B, T, self.n_heads, self.d_head).transpose(1, 2)
         v = v.view(B, T, self.n_heads, self.d_head).transpose(1, 2)
 
+        # 2.1. Cập nhật KV Cache nếu được kích hoạt
+        if kv_cache is not None and layer_idx is not None:
+            k, v = kv_cache.update(layer_idx, k, v)
+
+        T_k = k.size(2)
+
         # 3. Scaled Dot-Product Attention: S = (Q @ K^T) * scale
-        # q: (B, H, T, d_k), k.transpose(-2, -1): (B, H, d_k, T) -> att: (B, H, T, T)
+        # q: (B, H, T, d_k), k.transpose(-2, -1): (B, H, d_k, T_k) -> att: (B, H, T, T_k)
         att = (q @ k.transpose(-2, -1)) * self.scale
 
         # 4. Áp dụng Causal Mask
-        att = att + self.mask[:, :, :T, :T]
+        if T == T_k:
+            att = att + self.mask[:, :, :T, :T]
+        elif T > 1:
+            pos_offset = T_k - T
+            causal_mask = torch.triu(
+                torch.full((T, T_k), float('-inf'), device=x.device),
+                diagonal=pos_offset + 1
+            )
+            att = att + causal_mask.view(1, 1, T, T_k)
+        # Nếu T == 1 và T_k > 1: token mới duy nhất được nhìn thấy toàn bộ ngữ cảnh quá khứ -> Không cần mask
 
         # 5. Softmax và Dropout
         att = F.softmax(att, dim=-1)
         att = self.attn_dropout(att)
 
-        # 6. Nhân với Value V: (B, H, T, T) @ (B, H, T, d_head) -> (B, H, T, d_head)
+        # 6. Nhân với Value V: (B, H, T, T_k) @ (B, H, T_k, d_head) -> (B, H, T, d_head)
         y = att @ v
 
         # 7. Ghép các heads trở lại hình dạng chuẩn: (B, T, d_model)

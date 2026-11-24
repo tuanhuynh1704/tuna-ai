@@ -31,13 +31,14 @@ class PositionalEmbedding(nn.Module):
     Mã hóa vị trí học được (Learned Positional Embedding) tương tự GPT-2:
     W_P: shape (context_length, d_model).
     Cung cấp thông tin về vị trí tương đối và tuyệt đối của mỗi từ trong câu.
+    Hỗ trợ pos_offset phục vụ KV-Cache trong quá trình giải mã tự hồi quy.
     """
     def __init__(self, context_length: int, d_model: int):
         super().__init__()
         self.lut = nn.Embedding(context_length, d_model)
 
-    def forward(self, seq_len: int, device: torch.device) -> torch.Tensor:
-        positions = torch.arange(seq_len, dtype=torch.long, device=device)
+    def forward(self, seq_len: int, device: torch.device, pos_offset: int = 0) -> torch.Tensor:
+        positions = torch.arange(pos_offset, pos_offset + seq_len, dtype=torch.long, device=device)
         # positions: (seq_len,) -> (1, seq_len, d_model)
         return self.lut(positions).unsqueeze(0)
 
@@ -51,13 +52,15 @@ class TransformerEmbedding(nn.Module):
         self.drop = nn.Dropout(dropout)
         self.context_length = context_length
 
-    def forward(self, input_ids: torch.Tensor) -> torch.Tensor:
+    def forward(self, input_ids: torch.Tensor, pos_offset: int = 0) -> torch.Tensor:
         # input_ids: (Batch_Size, Seq_Len)
         B, T = input_ids.shape
-        assert T <= self.context_length, f"Độ dài chuỗi {T} vượt quá context_length {self.context_length}"
+        assert pos_offset + T <= self.context_length, (
+            f"Vị trí kết thúc {pos_offset + T} vượt quá context_length {self.context_length}"
+        )
 
         tok_embeddings = self.token_emb(input_ids)
-        pos_embeddings = self.pos_emb(T, input_ids.device)
+        pos_embeddings = self.pos_emb(T, input_ids.device, pos_offset=pos_offset)
 
         # Tổng hợp embedding: X = Token_Emb + Pos_Emb
         x = tok_embeddings + pos_embeddings

@@ -7,6 +7,7 @@ Khối Transformer Block và các thành phần cốt lõi:
 - TransformerBlock: Cấu trúc Pre-Norm (Pre-RMSNorm) kết hợp Residual Connections.
 """
 
+from typing import Optional, Any, Tuple, Union
 import torch
 import torch.nn as nn
 from src.models.attention import CausalSelfAttention
@@ -80,9 +81,14 @@ class TransformerBlock(nn.Module):
             bias=bias
         )
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # 1. Attention với Pre-Norm và Residual Connection
-        x = x + self.attn(self.norm1(x))
+    def forward(
+        self,
+        x: torch.Tensor,
+        kv_cache: Optional[Any] = None,
+        layer_idx: Optional[int] = None
+    ) -> torch.Tensor:
+        # 1. Attention với Pre-Norm và Residual Connection (kèm hỗ trợ KV Cache)
+        x = x + self.attn(self.norm1(x), kv_cache=kv_cache, layer_idx=layer_idx)
         # 2. Feed-Forward với Pre-Norm và Residual Connection
         x = x + self.ffn(self.norm2(x))
         return x
