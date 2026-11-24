@@ -51,6 +51,29 @@ class BilingualBPETokenizer:
             re.UNICODE
         )
 
+    def __len__(self) -> int:
+        return len(self.vocab)
+
+    @property
+    def vocab_size(self) -> int:
+        return len(self.vocab)
+
+    @property
+    def pad_token_id(self) -> int:
+        return self.special_tokens.get("<pad>", 0)
+
+    @property
+    def unk_token_id(self) -> int:
+        return self.special_tokens.get("<unk>", 1)
+
+    @property
+    def bos_token_id(self) -> int:
+        return self.special_tokens.get("<bos>", 2)
+
+    @property
+    def eos_token_id(self) -> int:
+        return self.special_tokens.get("<eos>", 3)
+
     def train(self, texts: List[str], target_vocab_size: int = 1000):
         """
         Huấn luyện BPE Tokenizer từ danh sách văn bản:
@@ -213,3 +236,8 @@ class BilingualBPETokenizer:
             merges=merges,
             special_tokens=data.get("special_tokens")
         )
+
+    @classmethod
+    def from_file(cls, file_path: str) -> "BilingualBPETokenizer":
+        """Alias cho load(file_path)."""
+        return cls.load(file_path)

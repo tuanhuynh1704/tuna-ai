@@ -132,15 +132,18 @@ flowchart LR
 
 ### Giai đoạn IV: Xây dựng Corpus Song ngữ & Pre-training Mô hình Chính (Tháng 7 - 10 | M7 - M8)
 
-#### Milestone M7: Data Acquisition & Processing Pipeline
+#### Milestone M7: Data Acquisition & Processing Pipeline *(Đã hoàn thành - Nghiệm thu Ngày 13)*
 - **Nội dung**:
   - Nguồn dữ liệu hợp lệ: Wikipedia (Vi + En), OPUS parallel corpus, CC-100 subset.
   - Pipeline 10 bước: Acquisition $\to$ Extraction $\to$ Normalization $\to$ Language Detection $\to$ Deduplication (Exact & MinHash) $\to$ Quality Filter $\to$ Safety Filter $\to$ PII Removal $\to$ Tokenization $\to$ Dataset Packing.
   - Phân bổ corpus: 50% tiếng Việt - 50% tiếng Anh.
 - **Sản phẩm bàn giao**:
-  - `src/data/cleaner.py`, `src/data/deduplicator.py`, `src/data/loader.py`.
+  - `src/data/cleaner.py`, `src/data/pii_filter.py`, `src/data/deduplicator.py`, `src/data/packer.py`, `src/data/loader.py`.
   - File `manifest.json` ghi nhận nguồn gốc, giấy phép, hash, số bản ghi và số lượng token cho từng shard.
-- **Tiêu chí nghiệm thu**: Pipeline có khả năng tái lập hoàn toàn; loại bỏ trùng lặp và PII; xuất ra binary token chunks phục vụ nạp nhanh.
+  - `tests/test_dataset_engineering.py`: Bộ kiểm thử 15 bài test tự động bao quát toàn bộ quy trình.
+  - `research/dataset/build_bilingual_corpus.py`: Thực nghiệm trọn vẹn quy trình 10 bước.
+  - Báo cáo kỹ thuật: `docs/weekly_reports/day_13_notes.md`.
+- **Tiêu chí nghiệm thu**: Pipeline có khả năng tái lập hoàn toàn; loại bỏ trùng lặp và PII; xuất ra binary token chunks phục vụ nạp nhanh (86/86 tests toàn dự án passed 100%).
 
 #### Milestone M8: Pre-training Mô hình Song ngữ & Kiểm thử Thí nghiệm
 - **Nội dung**:

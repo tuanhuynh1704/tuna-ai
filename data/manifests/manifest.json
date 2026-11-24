@@ -1,0 +1,76 @@
+{
+  "dataset_name": "Tuna-AI Bilingual Pretraining Corpus",
+  "version": "1.0.0",
+  "created_at": "2026-11-24T12:25:05.670886",
+  "license": "MIT / CC-BY-4.0",
+  "total_documents": 11,
+  "total_tokens": 790,
+  "total_size_bytes": 1580,
+  "language_counts": {
+    "vi": 7,
+    "en": 4,
+    "other": 0
+  },
+  "language_distribution_percent": {
+    "vi": 63.64,
+    "en": 36.36,
+    "other": 0.0
+  },
+  "num_shards": 6,
+  "shards": [
+    {
+      "shard_id": 0,
+      "filename": "tuna_shard_00000.bin",
+      "path": "data/processed/tuna_shard_00000.bin",
+      "num_tokens": 113,
+      "num_documents": 2,
+      "file_size_bytes": 226,
+      "sha256": "703114267eb3c5d768f018f9ddb96955680c97fbe961d6140e8d57425ed234de"
+    },
+    {
+      "shard_id": 1,
+      "filename": "tuna_shard_00001.bin",
+      "path": "data/processed/tuna_shard_00001.bin",
+      "num_tokens": 148,
+      "num_documents": 2,
+      "file_size_bytes": 296,
+      "sha256": "062909d31f3aaa23158b57e967324401d55e8120c0e07b123f1c6d3e75ba2f90"
+    },
+    {
+      "shard_id": 2,
+      "filename": "tuna_shard_00002.bin",
+      "path": "data/processed/tuna_shard_00002.bin",
+      "num_tokens": 151,
+      "num_documents": 2,
+      "file_size_bytes": 302,
+      "sha256": "af21f6c7d44fe39dc3f76fdc2193cbdd6f91df90649f8559b63e3e568109fd00"
+    },
+    {
+      "shard_id": 3,
+      "filename": "tuna_shard_00003.bin",
+      "path": "data/processed/tuna_shard_00003.bin",
+      "num_tokens": 172,
+      "num_documents": 2,
+      "file_size_bytes": 344,
+      "sha256": "2e4f40c81efb6f8c4494ccb8c8b81f8fd4adbb4890ae4b12194decc3a20420d5"
+    },
+    {
+      "shard_id": 4,
+      "filename": "tuna_shard_00004.bin",
+      "path": "data/processed/tuna_shard_00004.bin",
+      "num_tokens": 143,
+      "num_documents": 2,
+      "file_size_bytes": 286,
+      "sha256": "0fe744c36a2f8ccc37cd8fcd2d70095528a80eb25e3b72722fa10e3131360301"
+    },
+    {
+      "shard_id": 5,
+      "filename": "tuna_shard_00005.bin",
+      "path": "data/processed/tuna_shard_00005.bin",
+      "num_tokens": 63,
+      "num_documents": 1,
+      "file_size_bytes": 126,
+      "sha256": "85fcebd955863ee247f6be9d44f3ee51c2b976f436d52d8166eb3d688a6a1ba5"
+    }
+  ]
+}
