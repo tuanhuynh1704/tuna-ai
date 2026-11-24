@@ -210,11 +210,18 @@ flowchart LR
   - Báo cáo kỹ thuật: `docs/weekly_reports/day_17_notes.md`.
 - **Tiêu chí nghiệm thu**: Chạy inference offline 100% không cần kết nối mạng trên máy tính i7-1165G7; KV Cache đạt tăng tốc vượt bậc; 102/102 tests toàn dự án passed 100%.
 
-#### Milestone M12: Model Serving API & Tài liệu Tổng kết
+#### Milestone M12: Model Serving API & Tài liệu Tổng kết *(Đã hoàn thành - Nghiệm thu Ngày 18 - HOÀN TẤT DỰ ÁN)*
 - **Nội dung**:
-  - Viết REST API cục bộ bằng FastAPI: `/v1/generate`, `/v1/chat/completions`, `/health`.
-  - Hoàn thiện tài liệu kỹ thuật, hướng dẫn cài đặt và vận hành.
-- **Tiêu chí nghiệm thu**: API phục vụ phản hồi ổn định với curl/Postman; tài liệu đầy đủ để người khác có thể dựng lại dự án từ đầu.
+  - Viết REST API cục bộ bằng FastAPI & Uvicorn: `/health`, `/v1/models`, `/v1/generate`, `/v1/chat/completions` (hỗ trợ cả JSON và SSE streaming tương thích chuẩn OpenAI).
+  - Tự động nạp mô hình từ `models/tuna_offline_v1/` vận hành offline 100% trên CPU Intel Core i7-1165G7.
+  - Hoàn thiện tài liệu tổng kết dự án [README.md](file:///c:/Users/nkocn/OneDrive/Desktop/Plan/tuna-ai/README.md) hướng dẫn toàn trình từ A đến Z.
+- **Sản phẩm bàn giao**:
+  - `src/serving/app.py`: Ứng dụng FastAPI Serving REST API.
+  - `scripts/serve_api.py`: Kịch bản khởi chạy máy chủ dòng lệnh CLI.
+  - `tests/test_serving_api.py`: Bộ kiểm thử 5 bài test tự động cho toàn bộ các endpoints.
+  - `README.md`: Tài liệu tổng quan dự án toàn diện.
+  - Báo cáo kỹ thuật: `docs/weekly_reports/day_18_notes.md`.
+- **Tiêu chí nghiệm thu**: API phục vụ phản hồi ổn định với TestClient/curl; tài liệu đầy đủ từ A đến Z; **107/107 tests toàn dự án passed 100% với 0 warnings**.
 
 ---
 

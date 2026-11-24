@@ -42,4 +42,6 @@ pythonpath = [
 filterwarnings = [
     "ignore::pytest.PytestRemovedIn10Warning",
     "ignore::DeprecationWarning",
+    "ignore:.*starlette.*",
+    "ignore:.*httpx.*",
 ]
