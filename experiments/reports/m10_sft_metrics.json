@@ -1,0 +1,19 @@
+{
+  "final_train_loss": 1.1447972059249878,
+  "total_steps": 165,
+  "total_time_sec": 1.8177490234375,
+  "chat_logs": [
+    {
+      "user": "Xin chào! Bạn là ai?",
+      "assistant": "Xiim_enh hóachmiiendiiiiim�m"
+    },
+    {
+      "user": "Trí tuệ nhân tạo là gì?",
+      "assistant": ",nim_end|>\n.<|>\normm n chcmi"
+    },
+    {
+      "user": "What is machine learning?",
+      "assistant": "ôiarm_end|>\n\n�diiin ftning acr"
+    }
+  ]
+}

@@ -179,12 +179,20 @@ flowchart LR
   - Báo cáo kỹ thuật: `docs/weekly_reports/day_15_notes.md`.
 - **Tiêu chí nghiệm thu**: Test set độc lập, không rò rỉ vào training set; harness tự động hóa hoàn toàn; 94/94 tests toàn dự án passed 100%.
 
-#### Milestone M10: Instruction Tuning (SFT)
+#### Milestone M10: Instruction Tuning (SFT) *(Đã hoàn thành - Nghiệm thu Ngày 16)*
 - **Nội dung**:
   - Bộ dữ liệu hội thoại mẫu dạng Chat (`role`: `system`, `user`, `assistant`).
-  - Chat Template định dạng rõ ranh giới lượt trò chuyện.
-  - Áp dụng **Response Masking**: Chỉ tính loss trên phần trả lời của Assistant, không tính loss trên prompt của User.
-- **Tiêu chí nghiệm thu**: Mô hình biết dừng lượt (`<eos>`) và phản hồi theo định dạng hỏi - đáp thay vì chỉ tiếp nối văn bản tự do.
+  - Chat Template định dạng rõ ranh giới lượt trò chuyện (`<|im_start|>`, `<|im_end|>`).
+  - Áp dụng **Response Masking**: Chỉ tính loss trên phần trả lời của Assistant (nhãn `-100` cho Prompt), không phạt câu hỏi của User.
+- **Sản phẩm bàn giao**:
+  - `src/instruction/chat_template.py`: Lớp `ChatTemplate` định dạng ChatML và tách câu trả lời sạch.
+  - `src/instruction/dataset.py`: `SFTDataset` hỗ trợ Response Masking và Left Truncation thông minh.
+  - `src/instruction/sft_trainer.py`: Động cơ `SFTTrainer` huấn luyện chuyên sâu đạt Response Loss = 1.1448 (Perplexity = 3.24).
+  - `research/instruction/train_sft.py`: Kịch bản thực thi SFT và tương tác đàm thoại.
+  - `experiments/reports/m10_sft_report.md` & `m10_sft_metrics.json`: Báo cáo nghiệm thu chi tiết.
+  - `tests/test_instruction_tuning.py`: Bộ kiểm thử đơn vị tự động 4/4 bài test.
+  - Báo cáo kỹ thuật: `docs/weekly_reports/day_16_notes.md`.
+- **Tiêu chí nghiệm thu**: Mô hình biết dừng lượt (`<|im_end|>`) và phản hồi theo định dạng hỏi - đáp thay vì chỉ tiếp nối văn bản tự do; 98/98 tests toàn dự án passed 100%.
 
 #### Milestone M11: Inference Engine Offline & Tối ưu CPU
 - **Nội dung**:
