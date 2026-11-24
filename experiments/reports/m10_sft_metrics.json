@@ -1,19 +1,19 @@
 {
-  "final_train_loss": 1.1447972059249878,
-  "total_steps": 165,
-  "total_time_sec": 1.8177490234375,
+  "final_train_loss": 0.026376204565167427,
+  "total_steps": 460,
+  "total_time_sec": 6.8437113761901855,
   "chat_logs": [
     {
       "user": "Xin chào! Bạn là ai?",
-      "assistant": "Xiim_enh hóachmiiendiiiiim�m"
+      "assistant": "Xin chào! Tôi là Tuna-AI, mô hình ngôn ngữ lớn song ngữ V"
     },
     {
       "user": "Trí tuệ nhân tạo là gì?",
-      "assistant": ",nim_end|>\n.<|>\normm n chcmi"
+      "assistant": "Trí tuệ nhân tạo là ngành khoa học máy tính nghiên"
     },
     {
       "user": "What is machine learning?",
-      "assistant": "ôiarm_end|>\n\n�diiin ftning acr"
+      "assistant": "Thủnga a deep learning architectell"
     }
   ]
 }

@@ -140,15 +140,17 @@ class TextGenerator:
 
         generated_ids: List[int] = list(prompt_ids)
         new_token_ids: List[int] = []
+        prev_decoded_len = 0
 
         # Khởi tạo KV Cache nếu sử dụng
         kv_cache = None
         if use_cache:
             kv_cache = KVCache(num_layers=self.model.config.n_layers)
 
-        # Prefill prompt
+        # Prefill prompt: Đảm bảo chừa đủ không gian cho max_new_tokens trong context_length
         max_ctx = self.model.config.context_length
-        curr_prompt_ids = prompt_ids[-max_ctx:]
+        avail_prompt_len = max(4, max_ctx - max_new_tokens)
+        curr_prompt_ids = prompt_ids[-avail_prompt_len:]
         x = torch.tensor([curr_prompt_ids], dtype=torch.long, device=self.device)
 
         logits, _ = self.model(x, kv_cache=kv_cache)
@@ -168,20 +170,30 @@ class TextGenerator:
             probs = F.softmax(filtered_logits, dim=-1)
             next_token_id = int(torch.multinomial(probs, num_samples=1).item())
 
-            # Dừng nếu gặp stop token
-            if next_token_id in stop_id_list:
+            # Dừng nếu gặp stop token (sau khi đã sinh ít nhất 2 token nội dung)
+            if len(new_token_ids) >= 2 and next_token_id in stop_id_list:
                 break
 
             generated_ids.append(next_token_id)
             new_token_ids.append(next_token_id)
 
-            # Decode mẩu text vừa sinh
-            token_text = self.tokenizer.decode([next_token_id])
-            # Kiểm tra nếu token sinh ra là thẻ dừng
-            if any(st in token_text for st in stop_str_list):
+            full_decoded = self.tokenizer.decode(new_token_ids)
+
+            # Kiểm tra thẻ dừng trong chuỗi đã giải mã
+            stopped = False
+            for st in stop_str_list:
+                if st in full_decoded:
+                    stopped = True
+                    break
+            if len(new_token_ids) >= 2 and stopped:
                 break
 
-            yield token_text
+            # Bộ đệm UTF-8 streaming: nếu kết thúc bằng ký tự thay thế \ufffd, chờ token tiếp theo
+            if not full_decoded.endswith("\ufffd"):
+                new_chunk = full_decoded[prev_decoded_len:]
+                if new_chunk:
+                    prev_decoded_len = len(full_decoded)
+                    yield new_chunk
 
             # Chuẩn bị cho bước kế tiếp
             if use_cache and kv_cache is not None:
@@ -197,3 +209,13 @@ class TextGenerator:
                 x_all = torch.tensor([cond_ids], dtype=torch.long, device=self.device)
                 logits, _ = self.model(x_all)
                 next_token_logits = logits[0, -1, :]
+
+        # Xả phần đệm ký tự còn lại (nếu có và không chứa thẻ dừng)
+        final_decoded = self.tokenizer.decode(new_token_ids)
+        if len(final_decoded) > prev_decoded_len:
+            remaining = final_decoded[prev_decoded_len:]
+            for st in stop_str_list:
+                if st in remaining:
+                    remaining = remaining.split(st)[0]
+            if remaining:
+                yield remaining

@@ -21,7 +21,7 @@ class ChatTemplate:
 
     def __init__(
         self,
-        default_system_prompt: str = "Bạn là Tuna-AI, một trợ lý trí tuệ nhân tạo song ngữ (Việt - Anh) thông minh, hữu ích và chính xác."
+        default_system_prompt: str = ""
     ) -> None:
         self.default_system_prompt = default_system_prompt
 
@@ -72,7 +72,7 @@ class ChatTemplate:
             generated_text = generated_text.split(f"{self.START_TAG}assistant\n")[-1]
 
         # Cắt bỏ phần sau thẻ kết thúc lượt
-        for stop_tag in [self.END_TAG, "<eos>", "<|end|>"]:
+        for stop_tag in [self.END_TAG, "<|im_end", "<eos>", "<|end|>"]:
             if stop_tag in generated_text:
                 generated_text = generated_text.split(stop_tag)[0]
 

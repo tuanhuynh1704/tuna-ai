@@ -22,6 +22,7 @@ import torch.optim as optim
 # Thêm root vào sys.path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
+from src.inference.exporter import ModelExporter
 from src.instruction.chat_template import ChatTemplate
 from src.instruction.dataset import create_sft_dataloader
 from src.instruction.sft_trainer import SFTTrainer
@@ -35,8 +36,32 @@ def get_bilingual_sft_dataset():
     return [
         {
             "messages": [
+                {"role": "user", "content": "xin chào"},
+                {"role": "assistant", "content": "Xin chào bạn! Tôi là Tuna-AI, rất vui được trò chuyện với bạn."},
+            ]
+        },
+        {
+            "messages": [
                 {"role": "user", "content": "Xin chào! Bạn là ai?"},
                 {"role": "assistant", "content": "Xin chào! Tôi là Tuna-AI, mô hình ngôn ngữ lớn song ngữ Việt - Anh."},
+            ]
+        },
+        {
+            "messages": [
+                {"role": "user", "content": "hi"},
+                {"role": "assistant", "content": "Hello! I am Tuna-AI, how can I help you today?"},
+            ]
+        },
+        {
+            "messages": [
+                {"role": "user", "content": "hello"},
+                {"role": "assistant", "content": "Hello there! Welcome to Tuna-AI bilingual language model."},
+            ]
+        },
+        {
+            "messages": [
+                {"role": "user", "content": "hôm nay là thứ mấy"},
+                {"role": "assistant", "content": "Tôi là mô hình AI offline không có đồng hồ thời gian thực, nhưng tôi có thể giải đáp kiến thức cho bạn."},
             ]
         },
         {
@@ -81,7 +106,7 @@ def get_bilingual_sft_dataset():
                 {"role": "assistant", "content": "Có, tôi được đào tạo để giao tiếp trôi chảy bằng cả tiếng Việt và tiếng Anh."},
             ]
         },
-    ] * 6  # Nhân bản mẫu để huấn luyện đủ số bước
+    ] * 8  # Nhân bản mẫu để huấn luyện đủ số bước hội tụ
 
 
 def generate_chat_response(
@@ -129,7 +154,7 @@ def main():
     val_data = sft_data[:4]
     train_data = sft_data[4:]
 
-    context_length = 64
+    context_length = 128
     train_loader = create_sft_dataloader(train_data, tokenizer, batch_size=4, context_length=context_length)
     val_loader = create_sft_dataloader(val_data, tokenizer, batch_size=4, context_length=context_length, shuffle=False)
     print(f"[2] Khởi tạo DataLoader SFT: {len(train_data)} train samples, {len(val_data)} val samples (Context = {context_length})")
@@ -148,12 +173,12 @@ def main():
     print(f"[3] Khởi tạo mô hình TunaLM Mini SFT (~{sum(p.numel() for p in model.parameters()):,} parameters)")
 
     # 4. Huấn luyện SFT với Response Masking
-    print("\n[4] Tiến hành Fine-Tuning SFT (15 epochs) với Response Masking...")
-    optimizer = optim.AdamW(model.parameters(), lr=1.5e-3, weight_decay=0.01)
-    scheduler = CosineWarmupScheduler(optimizer, warmup_steps=10, total_steps=len(train_loader) * 15, min_lr=1e-5)
+    print("\n[4] Tiến hành Fine-Tuning SFT (20 epochs) với Response Masking...")
+    optimizer = optim.AdamW(model.parameters(), lr=2e-3, weight_decay=0.01)
+    scheduler = CosineWarmupScheduler(optimizer, warmup_steps=15, total_steps=len(train_loader) * 20, min_lr=1e-5)
     trainer = SFTTrainer(model=model, optimizer=optimizer, scheduler=scheduler, grad_clip=1.0)
 
-    train_res = trainer.train(train_loader=train_loader, val_loader=val_loader, epochs=15, log_interval=10)
+    train_res = trainer.train(train_loader=train_loader, val_loader=val_loader, epochs=20, log_interval=15)
     print(f"  ---> Hoàn thành SFT: Final Loss = {train_res['final_train_loss']:.4f} trong {train_res['total_time_sec']:.2f}s")
 
     # 5. Kiểm thử Khả năng Phản hồi Hội thoại (Chat Sampling)
@@ -223,6 +248,17 @@ def main():
         }, f, ensure_ascii=False, indent=2)
 
     print(f"\n[6] Đã xuất thành công Báo cáo Milestone M10 tại: {report_file}")
+
+    # 7. Xuất mô hình đã huấn luyện SFT vào thư mục Offline Runtime
+    print("\n[7] Đóng gói mô hình đã học SFT vào 'models/tuna_offline_v1'...")
+    export_dir = "models/tuna_offline_v1"
+    ModelExporter.export(
+        model=model,
+        tokenizer=tokenizer,
+        output_dir=export_dir,
+        model_name="TunaLM-Mini-SFT-Bilingual-v1.0"
+    )
+    print(f"  ---> Đã lưu trọng số đã học thành công vào: {export_dir}")
 
 
 if __name__ == "__main__":
