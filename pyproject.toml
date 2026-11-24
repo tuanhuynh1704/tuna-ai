@@ -39,3 +39,7 @@ pythonpath = [
     ".",
     "src",
 ]
+filterwarnings = [
+    "ignore::pytest.PytestRemovedIn10Warning",
+    "ignore::DeprecationWarning",
+]
