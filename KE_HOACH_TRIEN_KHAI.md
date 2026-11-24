@@ -165,11 +165,19 @@ flowchart LR
 
 ### Giai đoạn V: Đánh giá, Instruction Tuning & Offline Deployment (Tháng 10 - 18 | M9 - M12)
 
-#### Milestone M9: Evaluation Engine & Benchmark Suite
+#### Milestone M9: Evaluation Engine & Benchmark Suite *(Đã hoàn thành - Nghiệm thu Ngày 15)*
 - **Nội dung**: Xây dựng harness đánh giá độc lập:
-  - Định lượng: CrossEntropy Loss, Perplexity ($PPL = \exp(\text{Loss})$), Token Accuracy, Throughput.
-  - Định tính song ngữ: Hoàn thành câu tiếng Việt, ngữ pháp tiếng Anh, xử lý thuật ngữ song ngữ.
-- **Tiêu chí nghiệm thu**: Test set độc lập, không rò rỉ vào training set. Tạo báo cáo tự động tại `evaluation/reports/`.
+  - Định lượng: CrossEntropy Loss (4.4016), Perplexity (81.59), Next-Token Top-1 (3.44%) & Top-5 Accuracy (19.38%).
+  - Benchmark song ngữ Cloze Test: Đánh giá khả năng hiểu ngữ cảnh tiếng Việt và tiếng Anh.
+  - Đo lường Inference Latency: TTFT (2.48 ms), ITL (2.05 ms/token), Generation Throughput (482.99 tok/s), RAM (< 300 MB).
+- **Sản phẩm bàn giao**:
+  - `src/evaluation/benchmarks.py`: Bộ benchmark song ngữ `ClozeBenchmark`.
+  - `src/evaluation/evaluator.py`: Động cơ đánh giá toàn diện `ModelEvaluator`.
+  - `research/evaluation/run_evaluation.py`: Kịch bản thực thi đánh giá hoàn chỉnh.
+  - `experiments/reports/m9_evaluation_report.md` & `m9_eval_metrics.json`: Báo cáo định lượng chi tiết.
+  - `tests/test_evaluation.py`: Bộ kiểm thử tự động 5/5 bài test.
+  - Báo cáo kỹ thuật: `docs/weekly_reports/day_15_notes.md`.
+- **Tiêu chí nghiệm thu**: Test set độc lập, không rò rỉ vào training set; harness tự động hóa hoàn toàn; 94/94 tests toàn dự án passed 100%.
 
 #### Milestone M10: Instruction Tuning (SFT)
 - **Nội dung**:

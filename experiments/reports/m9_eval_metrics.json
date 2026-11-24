@@ -1,0 +1,18 @@
+{
+  "model_name": "TunaLM-Mini-Bilingual-v1.0",
+  "timestamp": "2026-11-24T12:44:50.475735",
+  "hold_out_loss": 4.4016,
+  "perplexity": 81.59,
+  "top1_accuracy_percent": 3.44,
+  "top5_accuracy_percent": 19.38,
+  "cloze_accuracy_percent": 25.0,
+  "cloze_category_stats": {
+    "vi_knowledge": 25.0,
+    "en_knowledge": 25.0
+  },
+  "time_to_first_token_ms": 2.48,
+  "inter_token_latency_ms": 2.05,
+  "generation_throughput_tok_per_sec": 482.99,
+  "ram_usage_mb": 290.79,
+  "parameters_count": 132672
+}

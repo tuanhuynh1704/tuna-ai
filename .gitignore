@@ -20,6 +20,7 @@ data/raw/*
 data/processed/*
 data/tokenized/*
 data/experiments/*
+data/evaluation/*
 checkpoints/*
 !checkpoints/.gitkeep
 !data/raw/.gitkeep
@@ -28,6 +29,7 @@ checkpoints/*
 !data/validation/.gitkeep
 !data/manifests/.gitkeep
 !data/experiments/.gitkeep
+!data/evaluation/.gitkeep
 
 # IDE and OS
 .vscode/
