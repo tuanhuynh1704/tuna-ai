@@ -8,7 +8,7 @@ Kiến trúc Mô hình Ngôn ngữ Hoàn chỉnh (TunaLM / Mini GPT):
 - Tích hợp Hàm sinh văn bản tự hồi quy (Autoregressive Text Generation).
 """
 
-from typing import Tuple, Optional, Dict, Any
+from typing import Tuple, Optional, Dict, Any, Union
 import math
 import json
 import torch
@@ -31,7 +31,8 @@ class TunaLMConfig:
         d_ff: int = 256,
         dropout: float = 0.1,
         bias: bool = False,
-        tie_weights: bool = True
+        tie_weights: bool = True,
+        **kwargs
     ):
         self.vocab_size = vocab_size
         self.context_length = context_length
@@ -42,6 +43,7 @@ class TunaLMConfig:
         self.dropout = dropout
         self.bias = bias
         self.tie_weights = tie_weights
+        self.extra_kwargs = kwargs
 
     @classmethod
     def from_json(cls, json_path: str) -> "TunaLMConfig":
@@ -63,8 +65,15 @@ class TunaLMConfig:
 class TunaLM(nn.Module):
     """Mô hình Ngôn ngữ Lớn Song ngữ Cốt lõi của Dự án Tuna-AI."""
 
-    def __init__(self, config: TunaLMConfig):
+    def __init__(self, config: Union[TunaLMConfig, Dict[str, Any]]):
         super().__init__()
+        if isinstance(config, dict):
+            cfg_dict = dict(config)
+            if "num_layers" in cfg_dict and "n_layers" not in cfg_dict:
+                cfg_dict["n_layers"] = cfg_dict.pop("num_layers")
+            if "num_heads" in cfg_dict and "n_heads" not in cfg_dict:
+                cfg_dict["n_heads"] = cfg_dict.pop("num_heads")
+            config = TunaLMConfig(**cfg_dict)
         self.config = config
 
         # 1. Tầng Embedding (Token + Learned Position)

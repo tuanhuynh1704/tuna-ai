@@ -1,0 +1,53 @@
+[
+  {
+    "experiment_name": "EXP-001-English",
+    "corpus_mode": "English Only",
+    "initial_loss": 6.2253,
+    "final_loss": 4.2727,
+    "best_val_loss": 4.2627,
+    "final_perplexity": 71.0,
+    "avg_throughput_tok_per_sec": 11839.5,
+    "total_duration_sec": 0.65,
+    "ram_usage_mb": 8.65,
+    "sample_generations": {
+      "before_Trí tuệ nhân tạo": "Trí tuệ nhân tạo sáng� là� h� vềâng�",
+      "before_The transformer model": "The transformer model v�ườ1M rét wãt\u0005",
+      "after_Trí tuệ nhân tạo": "Trí tuệ nhân tạoingarretivi n conf",
+      "after_The transformer model": "The transformer modelenes l lanoriuh"
+    }
+  },
+  {
+    "experiment_name": "EXP-002-Vietnamese",
+    "corpus_mode": "Vietnamese Only",
+    "initial_loss": 6.2269,
+    "final_loss": 4.6122,
+    "best_val_loss": 4.7528,
+    "final_perplexity": 115.91,
+    "avg_throughput_tok_per_sec": 11780.5,
+    "total_duration_sec": 0.65,
+    "ram_usage_mb": 1.56,
+    "sample_generations": {
+      "before_Trí tuệ nhân tạo": "Trí tuệ nhân tạo sáng� là� h� vềâng�",
+      "before_The transformer model": "The transformer model v�ườ1M rét wãt\u0005",
+      "after_Trí tuệ nhân tạo": "Trí tuệ nhân tạonh�quyẑiâ v�",
+      "after_The transformer model": "The transformer modelo ngữnh lnaiuh"
+    }
+  },
+  {
+    "experiment_name": "EXP-003-Bilingual",
+    "corpus_mode": "Bilingual 50/50",
+    "initial_loss": 6.2269,
+    "final_loss": 4.8502,
+    "best_val_loss": 4.9259,
+    "final_perplexity": 137.82,
+    "avg_throughput_tok_per_sec": 12075.6,
+    "total_duration_sec": 0.64,
+    "ram_usage_mb": 0.27,
+    "sample_generations": {
+      "before_Trí tuệ nhân tạo": "Trí tuệ nhân tạo sáng� là� h� vềâng�",
+      "before_The transformer model": "The transformer model v�ườ1M rét wãt\u0005",
+      "after_Trí tuệ nhân tạo": "Trí tuệ nhân tạonhtreu�viâ v�",
+      "after_The transformer model": "The transformer modelen ngữ l lanaiuh"
+    }
+  }
+]

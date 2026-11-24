@@ -19,6 +19,7 @@ ENV/
 data/raw/*
 data/processed/*
 data/tokenized/*
+data/experiments/*
 checkpoints/*
 !checkpoints/.gitkeep
 !data/raw/.gitkeep
@@ -26,6 +27,7 @@ checkpoints/*
 !data/tokenized/.gitkeep
 !data/validation/.gitkeep
 !data/manifests/.gitkeep
+!data/experiments/.gitkeep
 
 # IDE and OS
 .vscode/

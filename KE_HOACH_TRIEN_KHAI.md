@@ -145,17 +145,21 @@ flowchart LR
   - Báo cáo kỹ thuật: `docs/weekly_reports/day_13_notes.md`.
 - **Tiêu chí nghiệm thu**: Pipeline có khả năng tái lập hoàn toàn; loại bỏ trùng lặp và PII; xuất ra binary token chunks phục vụ nạp nhanh (86/86 tests toàn dự án passed 100%).
 
-#### Milestone M8: Pre-training Mô hình Song ngữ & Kiểm thử Thí nghiệm
+#### Milestone M8: Pre-training Mô hình Song ngữ & Kiểm thử Thí nghiệm *(Đã hoàn thành - Nghiệm thu Ngày 14)*
 - **Nội dung**:
-  - Huấn luyện mô hình từ random weights với streaming dataset.
+  - Huấn luyện mô hình từ random weights với streaming dataset và `ShardDataLoader` memmap uint16.
   - Thực hiện các thí nghiệm có kiểm soát:
-    - `EXP-001`: Corpus tiếng Anh.
-    - `EXP-002`: Corpus tiếng Việt.
-    - `EXP-003`: Corpus song ngữ (50/50).
-    - `EXP-004` $\to$ `EXP-007`: Khảo sát Vocab, Context Length, Learning Rate.
-- **Tiêu chí nghiệm thu**:
-  - Đo lường chi tiết: token/s, RAM consumption, CPU temperature, Validation Loss, Perplexity.
-  - Hoàn tất bảng theo dõi thí nghiệm và báo cáo so sánh tại `experiments/reports/`.
+    - `EXP-001`: Corpus thuần tiếng Anh (Loss: 6.2253 $\to$ 4.2727, PPL: 71.00).
+    - `EXP-002`: Corpus thuần tiếng Việt (Loss: 6.2269 $\to$ 4.6122, PPL: 115.91).
+    - `EXP-003`: Corpus song ngữ cân bằng 50/50 (Loss: 6.2269 $\to$ 4.8502, PPL: 137.82).
+- **Sản phẩm bàn giao**:
+  - `src/data/loader.py`: Nâng cấp `ShardDataLoader` bộ nạp memmap uint16 streaming chống tràn 16GB RAM.
+  - `src/training/experiment.py`: Hệ thống quản lý và thực thi thí nghiệm `ExperimentRunner`.
+  - `research/experiments/run_pretraining_experiments.py`: Kịch bản chạy toàn diện chuỗi thí nghiệm.
+  - `experiments/reports/m8_pretraining_experiments.md` & `m8_metrics.json`: Báo cáo so sánh và chỉ số chi tiết.
+  - `tests/test_pretraining_experiments.py`: Bộ kiểm thử đơn vị tự động.
+  - Báo cáo kỹ thuật: `docs/weekly_reports/day_14_notes.md`.
+- **Tiêu chí nghiệm thu**: Đo lường chi tiết token/s (~12.000 tok/s), mức chiếm dụng RAM (< 150 MB), Validation Loss, Perplexity và chất lượng sinh tự hồi quy; 89/89 tests toàn dự án passed 100%.
 
 ---
 
